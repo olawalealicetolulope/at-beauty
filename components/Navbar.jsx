@@ -83,7 +83,7 @@ const Navbar = () => {
               }}
             >
               <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}> <Link href="/booking-appointment">Book Your Appointment</Link></MenuItem>
+              <MenuItem onClick={handleClose}> <Link href="/booking-appointment">Book a Session</Link></MenuItem>
               <MenuItem onClick={handleClose}>Logout</MenuItem>
             </Menu>
           </div>

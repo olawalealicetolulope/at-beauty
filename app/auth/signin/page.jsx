@@ -1,68 +1,62 @@
 import React from "react";
 import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa6";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaGithub, FaXTwitter } from "react-icons/fa6";
 import { auth, signIn } from "@/auth";
 
-const page = async () => {
-  const session = await auth()
-  console.log(session?.user?.name);
-  
-  return (
-    <main className="min-h-dvh bg-[url('/bg1.png')] bg-no-repeat bg-center bg-cover flex items-center justify-center">
-      <section className="min-h-dvh bg-black/20 bg-cover w-full">
-       <div className="space-y-10 max-md:p-3  w-1/2 mx-auto py-10">
-        <div className="flex justify-center">
-           <Image
-                    src={"/logo1.jpg"}
-                    alt="logo"
-                    width={1500}
-                    height={1500}
-                    className="w-20 h-20 rounded-full "
-                  />
-        </div>
-        <h1 className="md:text-4xl text-2xl text-orange-300 font-bold text-center">
-          Sign Up to AT Beauty
-        </h1>
+const Page = async () => {
+  const session = await auth();
 
-        <div className=" flex flex-col gap-10">
+  return (
+    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-gray-700">
+      <section className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 space-y-6">
+        <div className="flex flex-col items-center space-y-2">
+          <Image
+            src="/logo1.jpg"
+            alt="Logo"
+            width={80}
+            height={80}
+            className="rounded-full"
+          />
+          <h1 className="text-2xl font-semibold text-gray-800">Sign in to AT Beauty</h1>
+          <p className="text-sm text-gray-500 text-center">
+            Connect with your favorite social account to get started.
+          </p>
+        </div>
+
+        <div className="space-y-4">
           <form
             action={async () => {
               "use server";
               await signIn("google");
             }}
           >
-            <button className="border w-full flex items-center justify-center gap-3 text-lg rounded-full py-3">
+            <button className="w-full flex items-center justify-center gap-3 border rounded-lg py-3 hover:bg-gray-100 transition">
               <FcGoogle className="text-2xl" />
-              Sign in with Google
+              <span className="font-medium">Continue with Google</span>
             </button>
           </form>
-          <button className="border flex items-center justify-center gap-3 text-lg rounded-full py-3">
-            <FaGithub className="text-2xl" />
-            Sign in with Github
+
+          <button className="w-full flex items-center justify-center gap-3 border rounded-lg py-3 hover:bg-gray-100 transition">
+            <FaGithub className="text-xl text-gray-800" />
+            <span className="font-medium">Continue with GitHub</span>
           </button>
-          <button className="border flex items-center justify-center gap-3 text-lg rounded-full py-3">
-            <FaXTwitter className="text-2xl" />
-            Sign in with Twitter
+
+          <button className="w-full flex items-center justify-center gap-3 border rounded-lg py-3 hover:bg-gray-100 transition">
+            <FaXTwitter className="text-xl text-black" />
+            <span className="font-medium">Continue with Twitter</span>
           </button>
         </div>
 
-        <p className="text-sm text-center text-white ">
-          By signing in, you agree with our{" "}
-          <span className="hover:text-black hover:underline">
-            Terms of Use
-          </span>
-          , and{" "}
-          <span className="hover:text-black hover:underline">
-            privacy Policy
-          </span>
+        <p className="text-xs text-center text-gray-500">
+          By continuing, you agree to our{" "}
+          <span className="text-orange-600 hover:underline cursor-pointer">Terms of Use</span>{" "}
+          and{" "}
+          <span className="text-orange-600 hover:underline cursor-pointer">Privacy Policy</span>.
         </p>
-      </div>
-
       </section>
     </main>
   );
 };
 
-export default page;
+export default Page;
