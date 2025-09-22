@@ -1,19 +1,19 @@
 "use client";
-
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
 import { MdClose } from "react-icons/md";
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import { FaUserCircle } from "react-icons/fa";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const menuOpen = Boolean(anchorEl);
   const handleClick = (event) => setAnchorEl(event.currentTarget);
   const handleClose = () => setAnchorEl(null);
   const [navOpen, setNavOpen] = useState(false);
@@ -24,33 +24,38 @@ const Navbar = () => {
     { label: "About", url: "/about" },
     { label: "Services", url: "/service" },
     { label: "Blog", url: "/blog" },
-    { label: "Contact", url: "/contact" }
+    { label: "Contact", url: "/contact" },
   ];
 
   return (
-    <nav className="px-8 py-3 shadow-md flex items-center justify-between sticky top-0 w-full bg-zinc-900 z-50">
-      {/* Logo */}
-      <div className="flex items-center gap-1 z-50">
+    <nav className="px-4 sm:px-6 py-3 shadow-md flex items-center justify-between sticky top-0 w-full bg-zinc-900 z-50">
+      {/* ===== Logo & Brand ===== */}
+      <div className="flex items-center gap-2 z-50">
         <Image
           src={"/logo1.jpg"}
           alt="logo"
           width={1000}
           height={1000}
-          className="w-15 h-15 rounded-full"
+          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
         />
-        <p className="font-bold text-lg text-orange-300 max-md:hidden">AT Beauty</p>
+        {/* ✅ always visible now */}
+        <p className="font-bold text-lg sm:text-xl text-orange-300">
+          AT Beauty
+        </p>
       </div>
 
-      {/* Desktop Links */}
-      <div className="flex items-center gap-7 max-lg:hidden ml-auto">
+      {/* ===== Desktop Links ===== */}
+      <div className="flex items-center gap-6 max-lg:hidden ml-auto">
         {navItems.map((item, index) => {
           const isActive = pathname === item.url;
           return (
             <Link
               key={index}
               href={item.url}
-              className={`text-lg transition-all ${
-                isActive ? "text-orange-400 font-semibold" : "text-white hover:text-orange-400"
+              className={`text-base sm:text-lg transition-all ${
+                isActive
+                  ? "text-orange-400 font-semibold"
+                  : "text-white hover:text-orange-400"
               }`}
             >
               {item.label}
@@ -59,55 +64,79 @@ const Navbar = () => {
         })}
       </div>
 
-      {/* Auth Dropdown */}
-      {session ? (
-        <div>
-          <button
-            id="basic-button"
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}
-          >
-            <img
-              src={session?.user?.image}
-              alt={session?.user?.name?.slice(0, 2).toUpperCase()}
-              className="w-10 h-10 ml-7 rounded-full"
-            />
-          </button>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            slotProps={{ list: { 'aria-labelledby': 'basic-button' } }}
-          >
-            <MenuItem onClick={handleClose}>
-              <Link href="/profile">Profile</Link>
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <Link href="/booking-appointment">Book a Session</Link>
-            </MenuItem>
-            <MenuItem onClick={handleClose}>
-              <button onClick={() => signOut()}>LogOut</button>
-            </MenuItem>
-          </Menu>
-        </div>
-      ) : (
-        <Link
-          href={"/auth/signin"}
-          className="text-lg hover:text-orange-400 transition-all pl-7 text-white"
+      {/* ===== Right Section (Hamburger + User Icon) ===== */}
+      <div className="flex items-center gap-3 sm:gap-4 ml-auto lg:ml-6">
+        {/* Hamburger Button */}
+        <button
+          className="lg:hidden z-50"
+          onClick={() => setNavOpen(!navOpen)}
         >
-          Login
-        </Link>
-      )}
+          {navOpen ? (
+            <MdClose className="text-2xl text-white" />
+          ) : (
+            <HiOutlineMenuAlt3 className="text-2xl text-white" />
+          )}
+        </button>
 
-      {/* Mobile Nav Drawer */}
+        {/* User Icon */}
+        {session ? (
+          <div>
+            <button
+              id="user-button"
+              aria-controls={menuOpen ? "user-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={menuOpen ? "true" : undefined}
+              onClick={handleClick}
+              className="flex items-center justify-center rounded-full p-1 hover:bg-zinc-800 transition-colors"
+            >
+              <img
+                src={session?.user?.image}
+                alt={session?.user?.name?.slice(0, 2).toUpperCase()}
+                className="w-8 h-8 sm:w-9 sm:h-9 rounded-full object-cover border border-gray-300"
+              />
+            </button>
+            <Menu
+              id="user-menu"
+              anchorEl={anchorEl}
+              open={menuOpen}
+              onClose={handleClose}
+              slotProps={{ list: { "aria-labelledby": "user-button" } }}
+            >
+              <MenuItem onClick={handleClose}>
+                <Link href="/profile">Profile</Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <Link href="/booking-appointment">Book a Session</Link>
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <button onClick={() => signOut()}>Log Out</button>
+              </MenuItem>
+            </Menu>
+          </div>
+        ) : (
+          <Link
+            href="/auth/signin"
+            className="flex items-center justify-center rounded-full p-1 hover:bg-zinc-800 transition-colors"
+          >
+            <FaUserCircle className="text-white w-8 h-8 sm:w-9 sm:h-9" />
+          </Link>
+        )}
+      </div>
+
+      {/* ===== Mobile Nav Drawer ===== */}
       <div
-        className={`lg:hidden transition-transform duration-300 ${
+        className={`lg:hidden fixed top-0 left-0 h-dvh w-full bg-white z-40 flex flex-col items-center justify-center gap-12 sm:gap-16 transition-transform duration-300 ${
           navOpen ? "translate-x-0" : "translate-x-full"
-        } flex flex-col justify-center items-center gap-16 bg-white h-dvh w-full fixed top-0 left-0 z-40`}
+        }`}
       >
+        {/* Close button inside drawer */}
+        <button
+          onClick={() => setNavOpen(false)}
+          className="absolute top-5 right-5 text-gray-800 hover:text-orange-500"
+        >
+          <MdClose className="w-7 h-7" />
+        </button>
+
         {navItems.map((item, index) => {
           const isActive = pathname === item.url;
           return (
@@ -115,7 +144,7 @@ const Navbar = () => {
               onClick={() => setNavOpen(false)}
               key={index}
               href={item.url}
-              className={`text-lg transition-all ${
+              className={`text-lg sm:text-xl transition-all ${
                 isActive
                   ? "text-orange-500 font-semibold"
                   : "text-black hover:text-orange-400"
@@ -126,18 +155,6 @@ const Navbar = () => {
           );
         })}
       </div>
-
-      {/* Hamburger Button */}
-      <button
-        className="lg:hidden z-50"
-        onClick={() => setNavOpen(!navOpen)}
-      >
-        {navOpen ? (
-          <MdClose className="text-2xl text-black" />
-        ) : (
-          <HiOutlineMenuAlt3 className="text-2xl text-white" />
-        )}
-      </button>
     </nav>
   );
 };
