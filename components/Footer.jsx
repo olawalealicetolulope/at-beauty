@@ -11,7 +11,8 @@ const Footer = () => {
     { label: "About", url: "/about" },
     { label: "Services", url: "/service" },
     { label: "Blog", url: "/blog" },
-    { label: "Contact", url: "/contact" }
+    { label: "Contact", url: "/contact" },
+    { label: "Admin", url: "/auth/signin" }
   ];
 
   return (
@@ -51,7 +52,7 @@ const Footer = () => {
 
           <div className="flex  items-center   ">
             <button className="border  border-white hover:border-orange-400 hover:rounded-md px-5 py-2 text-white text-base lg:text-lg max-md:w-full hover:bg-orange-400 hover:text-black transition-all">
-              Contact Us
+               <Link href="/contact">Contact Us</Link>
             </button>
           </div>
         </div>
